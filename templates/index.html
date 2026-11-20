@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cloud Email Phishing Detector</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Roboto, Arial, sans-serif;
+            background: linear-gradient(135deg, #eef2ff 0%, #f8fafc 100%);
+            margin: 0;
+            padding: 40px 20px;
+            color: #1e293b;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 760px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 36px;
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+        .badge {
+            display: inline-block;
+            background: #dbeafe;
+            color: #1d4ed8;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 999px;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        .subtitle {
+            color: #64748b;
+            margin-top: 8px;
+            font-size: 15px;
+        }
+        .upload-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 14px;
+            background: #f8fafc;
+            padding: 18px 22px;
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            flex-wrap: wrap;
+        }
+        .file-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #ffffff;
+            color: #334155;
+            border: 1px solid #cbd5e1;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .file-label:hover {
+            border-color: #2563eb;
+            color: #2563eb;
+        }
+        input[type="file"] { display: none; }
+        .file-name {
+            color: #64748b;
+            font-size: 14px;
+            flex: 1;
+        }
+        button {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 12px 26px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+            transition: transform 0.15s;
+        }
+        button:hover { transform: translateY(-1px); }
+
+        .summary-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 32px;
+        }
+        .big-circle {
+            width: 164px;
+            height: 164px;
+            border-radius: 50%;
+            border: 9px solid;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+        }
+        .big-score { font-size: 36px; line-height: 1.1; }
+        .big-label { font-size: 13px; margin-top: 6px; letter-spacing: 0.8px; text-transform: uppercase; }
+
+        .metrics-row {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 26px;
+        }
+        .small-circle {
+            width: 102px;
+            height: 102px;
+            border-radius: 50%;
+            border: 5px solid;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        .small-score { font-size: 18px; margin-bottom: 3px; }
+
+        .high { background-color: #fef2f2; border-color: #dc2626; color: #991b1b; }
+        .medium { background-color: #fffbeb; border-color: #f59e0b; color: #92400e; }
+        .low { background-color: #f0fdf4; border-color: #16a34a; color: #166534; }
+
+        .details {
+            margin-top: 26px;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .section-title {
+            margin-top: 34px;
+            font-size: 18px;
+            color: #0f172a;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+            font-size: 14px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        th {
+            background-color: #f8fafc;
+            color: #475569;
+            font-weight: 600;
+        }
+        .pill {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <span class="badge">AWS CLOUD MONITORED</span>
+            <h1>Email Phishing Detector</h1>
+            <p class="subtitle">Upload an email text file (.txt) to analyze sender, attachments, links, and wording.</p>
+        </div>
+
+        <form class="upload-box" method="POST" enctype="multipart/form-data">
+            <label class="file-label" for="email_file">Choose Email File (.txt)</label>
+            <input id="email_file" type="file" name="email_file" accept=".txt" required
+                   onchange="document.getElementById('file-name').textContent = this.files[0] ? this.files[0].name : 'No file selected';">
+            <span id="file-name" class="file-name">No file selected</span>
+            <button type="submit">Scan Email</button>
+        </form>
+
+        {% if result %}
+            <div class="summary-wrap">
+                <div class="big-circle {% if result.score >= 50 %}high{% elif result.score >= 20 %}medium{% else %}low{% endif %}">
+                    <div class="big-score">{{ result.score }}/100</div>
+                    <div class="big-label">
+                        {% if result.score >= 50 %}Phishing{% elif result.score >= 20 %}Suspicious{% else %}Safe{% endif %}
+                    </div>
+                </div>
+
+                <div class="metrics-row">
+                    <div class="small-circle {% if result.sender_score > 0 %}high{% else %}low{% endif %}">
+                        <div class="small-score">{{ result.sender_score }}/40</div>
+                        <div>Sender</div>
+                    </div>
+                    <div class="small-circle {% if result.attachments_score > 0 %}high{% else %}low{% endif %}">
+                        <div class="small-score">{{ result.attachments_score }}/30</div>
+                        <div>Attachments</div>
+                    </div>
+                    <div class="small-circle {% if result.links_score > 0 %}medium{% else %}low{% endif %}">
+                        <div class="small-score">{{ result.links_score }}/20</div>
+                        <div>Links</div>
+                    </div>
+                    <div class="small-circle {% if result.wording_score > 0 %}medium{% else %}low{% endif %}">
+                        <div class="small-score">{{ result.wording_score }}/10</div>
+                        <div>Wording</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="details">
+                <p><strong>From:</strong> {{ result.sender }}</p>
+                <p><strong>Subject:</strong> {{ result.subject }}</p>
+                <p><strong>Detected Indicators:</strong></p>
+                <ul>
+                    {% for reason in result.reasons %}
+                        <li>{{ reason }}</li>
+                    {% else %}
+                        <li>No suspicious indicators found.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        {% if history %}
+            <h3 class="section-title">History of Scans</h3>
+            <table>
+                <tr>
+                    <th>From</th>
+                    <th>Subject</th>
+                    <th>Score</th>
+                    <th>Status</th>
+                </tr>
+                {% for item in history|reverse %}
+                <tr>
+                    <td>{{ item.sender }}</td>
+                    <td>{{ item.subject }}</td>
+                    <td>{{ item.score }}/100</td>
+                    <td>
+                        <span class="pill {% if item.score >= 50 %}high{% elif item.score >= 20 %}medium{% else %}low{% endif %}">
+                            {% if item.score >= 50 %}Phishing{% elif item.score >= 20 %}Suspicious{% else %}Safe{% endif %}
+                        </span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+    </div>
+</body>
+</html>

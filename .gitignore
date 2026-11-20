@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+venv/
+.env
+temp_email.txt
+
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+.terraform.lock.hcl
+
+.vscode/
+.idea/
+.DS_Store

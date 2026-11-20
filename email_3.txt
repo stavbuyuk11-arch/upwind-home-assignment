@@ -1,0 +1,6 @@
+From: updates@example-store.com
+Subject: Urgent: Confirm your recent order
+Attachments: receipt.pdf
+
+Hello,
+Please review your order status at http://192.0.2.50/order as soon as possible.

@@ -1,0 +1,6 @@
+From: newsletter@google.com
+Subject: Monthly Product Updates
+Attachments: summary.pdf
+
+Hi Stav,
+Here is our monthly newsletter with new features and tips. Read more at https://google.com/blog.
